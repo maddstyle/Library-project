@@ -33,6 +33,32 @@ router.get('/books/:bookId', (req, res, next) => {
     })
 });
 
+router.get('/books/add', (req, res, next) => {
+  res.render("book-add");
+});
+
+router.post('/books/add', (req, res, next) => {
+  const { title, author, description, rating } = req.body;
+  const newBook = new Book({ title, author, description, rating});
+  newBook.save()
+.then((book) => {
+  res.redirect('/books');
+})
+.catch((error) => {
+
+})
+});
+
+router.post('/books/edit', (req, res, next) => {
+  const { title, author, description, rating } = req.body;
+  Book.update({_id: req.query.book_id}, { $set: {title, author, description, rating }}, { new: true })
+  .then((book) => {
+    res.redirect('/books');
+  })
+  .catch((error) => {
+    console.log(error);
+  })
+});
 
 
 module.exports = router;
